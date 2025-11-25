@@ -1,0 +1,22 @@
+workflows:
+  ios-simulator:
+    name: iOS Simulator Build
+    environment:
+      flutter: stable
+      xcode: latest
+      vars:
+        FLUTTER_BUILD_MODE: release
+    scripts:
+      - name: Ensure project created
+        script: |
+          if [ ! -d ios ]; then
+            flutter create .
+          fi
+      - name: Get dependencies
+        script: |
+          flutter pub get
+      - name: Build iOS (simulator)
+        script: |
+          flutter build ios --simulator --no-codesign
+    artifacts:
+      - build/ios/iphonesimulator/**/*.app
