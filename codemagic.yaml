@@ -5,63 +5,18 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-      vars:
-        FLUTTER_BUILD_MODE: debug
     scripts:
-      - name: Ensure project created
+      - name: Ensure iOS project exists
         script: |
-          if [ ! -d ios ]; then
-            flutter create --org com.yourdomain .
+          if [ ! -f ios/Runner.xcodeproj/project.pbxproj ]; then
+            echo "Generating iOS project..."
+            flutter create --org com.yourdomain . --platforms=ios
           fi
       - name: Get dependencies
         script: |
           flutter pub get
-      - name: Build iOS (simulator)
-        script: |
-          flutter build ios --simulator --no-codesign --debug
-    artifacts:
-      - build/ios/iphonesimulator/**/*.app
-  
-  # ADD THIS NEW WORKFLOW FOR REAL iOS DEVICES
-  ios-device:
-    name: iOS Device Build
-    environment:
-      groups:
-        - apple_developer_credentials # You'll need to set this up
-      flutter: stable
-      xcode: latest
-      cocoapods: default
-    scripts:
-      - name: Set up code signing
-        script: |
-          echo "Setting up code signing..."
-      - name: Get dependencies
-        script: |
-          flutter pub get
-      - name: Build iOS for device
-        script: |
-          flutter build ios --release --no-codesign
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-
-  # SIMPLIFIED WORKFLOW FOR STARTING
-  simple-ios:
-    name: Simple iOS Build
-    environment:
-      flutter: stable
-      xcode: latest
-    scripts:
-      - name: Create iOS project if missing
-        script: |
-          if [ ! -d ios ]; then
-            flutter create --org com.yourdomain hello_flutter_codemagic
-          fi
-      - name: Get dependencies
-        script: |
-          flutter pub get
-      - name: Build for iOS simulator
+      - name: Build iOS simulator
         script: |
           flutter build ios --simulator --debug
     artifacts:
-      - build/ios/iphonesimulator/Runner.app
+      - build/ios/iphonesimulator/**/*.app
