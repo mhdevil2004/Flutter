@@ -2,6 +2,8 @@ name: hello_flutter_codemagic
 description: A simple Hello World app for Codemagic iOS build demo.
 publish_to: "none"
 
+version: 1.0.0+1   # <-- ADD THIS LINE
+
 environment:
   sdk: ">=2.19.0 <4.0.0"
 
